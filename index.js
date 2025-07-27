@@ -203,7 +203,7 @@ function main() {
         game.play();
     } catch (error) {
         console.error(`Error: ${error.message}`);
-        console.log('\nExample: node game.js 2,2,4,4,9,9 6,8,1,1,8,6 7,5,3,7,5,3');
+        console.log('\nExample: node index.js 2,2,4,4,9,9 6,8,1,1,8,6 7,5,3,7,5,3');
         console.log('Install: npm install cli-table3');
         process.exit(1);
     }
