@@ -15,16 +15,36 @@ class Dice {
 
 class DiceParser {
     static parse(args) {
-        if (args.length < 3) throw new Error('At least 3 dice required. Example: node game.js 2,2,4,4,9,9 6,8,1,1,8,6 7,5,3,7,5,3');
-        return args.map((arg, i) => {
-            const faces = arg.split(',').map(f => {
-                const n = parseInt(f.trim());
-                if (isNaN(n)) throw new Error(`Invalid number in dice ${i + 1}: ${f}`);
-                return n;
-            });
-            if (faces.length !== 6) throw new Error(`Dice ${i + 1} must have 6 faces, got ${faces.length}`);
-            return new Dice(faces);
-        });
+        if (args.length === 0) {
+            throw new Error('No dice provided. You need at least 3 dice. Example: node game.js 2,2,4,4,9,9 6,8,1,1,8,6 7,5,3,7,5,3');
+        }
+        
+        if (args.length < 3) {
+            throw new Error(`Only ${args.length} dice provided, but at least 3 dice are required. Example: node game.js 2,2,4,4,9,9 6,8,1,1,8,6 7,5,3,7,5,3`);
+        }
+
+        const dice = [];
+        for (let i = 0; i < args.length; i++) {
+            try {
+                const faces = args[i].split(',').map(face => {
+                    const num = parseInt(face.trim());
+                    if (isNaN(num)) {
+                        throw new Error(`Non-integer value "${face}" found in dice ${i + 1}. All face values must be integers.`);
+                    }
+                    return num;
+                });
+
+                if (faces.length !== 6) {
+                    throw new Error(`Dice ${i + 1} has ${faces.length} sides, but exactly 6 sides are required. Each dice must have format: 1,2,3,4,5,6`);
+                }
+
+                dice.push(new Dice(faces));
+            } catch (error) {
+                throw new Error(`Error in dice ${i + 1}: ${error.message}`);
+            }
+        }
+
+        return dice;
     }
 }
 
@@ -40,7 +60,7 @@ class CryptoHelper {
     static hmac(key, msg) { return crypto.createHmac('sha3-256', key).update(msg.toString()).digest('hex').toUpperCase(); }
 }
 
-// Fixed input helper using readline with promises
+
 class InputHelper {
     static async question(prompt) {
         const rl = readline.createInterface({
@@ -59,7 +79,6 @@ class InputHelper {
 
 class FairRandom {
     static async generate(min, max, prompt = 'Add your number') {
-        // CRITICAL: Generate NEW key for each HMAC calculation
         const key = CryptoHelper.generateKey();
         const computerNum = CryptoHelper.generateNumber(min, max);
         const hmac = CryptoHelper.hmac(key, computerNum);
@@ -95,7 +114,6 @@ class FairRandom {
 }
 
 class ProbabilityCalculator {
-    // Using "somebody already did it" approach with array methods
     static calculate(dice1, dice2) {
         return dice1.faces.reduce((wins, x) => 
             wins + dice2.faces.reduce((count, y) => count + (x > y ? 1 : 0), 0), 0
@@ -153,7 +171,6 @@ class Game {
 
     async play() {
         console.log("Let's determine who makes the first move.");
-        // Each fair random generation uses a NEW key
         const first = await FairRandom.generate(0, 1, 'Try to guess my selection') === 1;
         
         let compIdx, userIdx;
@@ -203,7 +220,6 @@ async function main() {
     } catch (error) {
         console.error(`Error: ${error.message}`);
         console.log('\nExample: node game.js 2,2,4,4,9,9 6,8,1,1,8,6 7,5,3,7,5,3');
-        console.log('Install: npm install cli-table3');
         process.exit(1);
     }
 }
