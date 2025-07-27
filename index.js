@@ -16,11 +16,11 @@ class Dice {
 class DiceParser {
     static parse(args) {
         if (args.length === 0) {
-            throw new Error('No dice provided. You need at least 3 dice. Example: node game.js 2,2,4,4,9,9 6,8,1,1,8,6 7,5,3,7,5,3');
+            throw new Error('No dice provided. You need at least 3 dice. Example: node index.js 2,2,4,4,9,9 6,8,1,1,8,6 7,5,3,7,5,3');
         }
         
         if (args.length < 3) {
-            throw new Error(`Only ${args.length} dice provided, but at least 3 dice are required. Example: node game.js 2,2,4,4,9,9 6,8,1,1,8,6 7,5,3,7,5,3`);
+            throw new Error(`Only ${args.length} dice provided, but at least 3 dice are required. Example: node index.js 2,2,4,4,9,9 6,8,1,1,8,6 7,5,3,7,5,3`);
         }
 
         const dice = [];
@@ -219,7 +219,7 @@ async function main() {
         await game.play();
     } catch (error) {
         console.error(`Error: ${error.message}`);
-        console.log('\nExample: node game.js 2,2,4,4,9,9 6,8,1,1,8,6 7,5,3,7,5,3');
+        console.log('\nExample: node index.js 2,2,4,4,9,9 6,8,1,1,8,6 7,5,3,7,5,3');
         process.exit(1);
     }
 }
