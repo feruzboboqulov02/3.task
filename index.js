@@ -14,7 +14,7 @@ class Dice {
 
 class DiceParser {
     static parse(args) {
-        if (args.length < 3) throw new Error('At least 3 dice required. Example: node game.js 2,2,4,4,9,9 6,8,1,1,8,6 7,5,3,7,5,3');
+        if (args.length < 3) throw new Error('At least 3 dice required. Example: node index.js 2,2,4,4,9,9 6,8,1,1,8,6 7,5,3,7,5,3');
         return args.map((arg, i) => {
             const faces = arg.split(',').map(f => {
                 const n = parseInt(f.trim());
@@ -204,7 +204,6 @@ function main() {
     } catch (error) {
         console.error(`Error: ${error.message}`);
         console.log('\nExample: node index.js 2,2,4,4,9,9 6,8,1,1,8,6 7,5,3,7,5,3');
-        console.log('Install: npm install cli-table3');
         process.exit(1);
     }
 }
